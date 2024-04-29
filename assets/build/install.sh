@@ -11,10 +11,12 @@ source "${FUNCTIONS_FILE}"
 
 log_info "Installing required packages and build dependencies ..."
 REQUIRED_PACKAGES=(
-  binutils patchelf
+  binutils patchelf default-libmysqlclient-dev libpq-dev
 )
 
-BUILD_DEPENDENCIES=()
+BUILD_DEPENDENCIES=(
+  build-essential python3-dev
+)
 
 log_info "Adding salt repository..."
 add_salt_repository
@@ -36,11 +38,12 @@ EOF
 
 # Install salt packages
 log_info "Installing salt packages ..."
-install_pkgs salt-master="${SALT_VERSION}" salt-minion="${SALT_VERSION}" salt-api="${SALT_VERSION}"
+install_pkgs salt-master="${SALT_VERSION_MAJ}.${SALT_VERSION_MIN}" salt-minion="${SALT_VERSION_MAJ}.${SALT_VERSION_MIN}" salt-api="${SALT_VERSION_MAJ}.${SALT_VERSION_MIN}"
 
 # Install python packages
 log_info "Installing python packages ..."
-salt-pip install pygit2==1.14.1
+#salt-pip install pygit2==1.14.1 mysqlclient psycopg2
+/opt/saltstack/salt/bin/python3.10 -m pip install pygit2==1.14.1 mysqlclient psycopg2
 
 # Configure ssh
 log_info "Configuring ssh ..."

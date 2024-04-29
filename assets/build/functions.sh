@@ -142,7 +142,8 @@ function add_salt_repository()
 
   local keyring_file="/etc/apt/keyrings/salt-archive-keyring.gpg"
   local root_url="https://repo.saltproject.io/salt/py3/ubuntu/${VERSION_ID:?}/${arch}"
+  #local root_url="https://repo.saltproject.io/salt/py3/debian/${VERSION_ID:?}/${arch}"
 
   download "${root_url}/SALT-PROJECT-GPG-PUBKEY-2023.gpg" "${keyring_file}"
-  echo "deb [signed-by=${keyring_file} arch=${arch}] ${root_url}/minor/${SALT_VERSION} ${VERSION_CODENAME:?} main" > /etc/apt/sources.list.d/salt.list
+  echo "deb [signed-by=${keyring_file} arch=${arch}] ${root_url}/minor/${SALT_VERSION_MAJ}.${SALT_VERSION_MIN} ${VERSION_CODENAME:?} main" > /etc/apt/sources.list.d/salt.list
 }
