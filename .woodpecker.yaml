@@ -9,7 +9,7 @@ steps:
       repo: coralhl/salt-master
       platforms:
         - linux/amd64
-        - linux/arm64
+        #- linux/arm64
       tags:
       - latest
       - 3007.0

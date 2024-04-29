@@ -46,6 +46,7 @@ RUN apt-get update \
     openssh-client \
     pkg-config \
     psmisc \
+    python3-openssl \
     sudo \
     supervisor \
     tzdata \
