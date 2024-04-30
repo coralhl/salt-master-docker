@@ -41,6 +41,15 @@ extension_modules: {{SALT_CACHE_DIR}}/master/extmods
 worker_threads: {{SALT_WORKER_THREADS}}
 
 
+netapi_enable_clients:
+  - local
+  - local_async
+  - local_batch
+  - local_subset
+  - wheel
+  - runner
+  - runner_async
+
 #####        Security settings       #####
 ##########################################
 # Enable passphrase protection of the Master signing_key. This only applies if
