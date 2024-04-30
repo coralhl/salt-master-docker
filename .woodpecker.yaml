@@ -12,4 +12,4 @@ steps:
         #- linux/arm64
       tags:
       - latest
-      - 3007.0
+      - 3006.7
