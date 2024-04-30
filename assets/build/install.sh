@@ -43,7 +43,7 @@ install_pkgs salt-master="${SALT_VERSION_MAJ}.${SALT_VERSION_MIN}" salt-minion="
 # Install python packages
 log_info "Installing python packages ..."
 #salt-pip install pygit2==1.14.1 mysqlclient psycopg2
-/opt/saltstack/salt/bin/python3.10 -m pip install pygit2==1.14.1 mysqlclient psycopg2
+/opt/saltstack/salt/bin/python3.10 -m pip install pygit2==1.14.1 mysqlclient psycopg2 nest_asyncio
 
 # Configure ssh
 log_info "Configuring ssh ..."
