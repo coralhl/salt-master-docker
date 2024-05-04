@@ -38,7 +38,11 @@ EOF
 
 # Install salt packages
 log_info "Installing salt packages ..."
-install_pkgs salt-master="${SALT_VERSION_MAJ}.${SALT_VERSION_MIN}" salt-minion="${SALT_VERSION_MAJ}.${SALT_VERSION_MIN}" salt-api="${SALT_VERSION_MAJ}.${SALT_VERSION_MIN}"
+install_pkgs \
+  salt-master="${SALT_VERSION_MAJ}.${SALT_VERSION_MIN}" \
+  salt-minion="${SALT_VERSION_MAJ}.${SALT_VERSION_MIN}" \
+  salt-api="${SALT_VERSION_MAJ}.${SALT_VERSION_MIN}" \
+  salt-ssh="${SALT_VERSION_MAJ}.${SALT_VERSION_MIN}"
 
 # Install python packages
 log_info "Installing python packages ..."
