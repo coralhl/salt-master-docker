@@ -15,3 +15,5 @@ social/
 # Ignore IDEs
 .idea/
 .vscode/
+
+.woodpecker.yaml
