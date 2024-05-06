@@ -1,6 +1,7 @@
 name: Publish Docker image
 
 on:
+  workflow_dispatch:
   push:
     branches:
       - main
@@ -20,7 +21,7 @@ env:
   IMAGE_NAME: coralhl/salt-master
   PLATFORMS: linux/amd64,linux/arm64
   CACHE_PATH: ${{ github.workspace }}/.buildx-cache
-  EXTRA_REGISTRIES: ghcr.io quay.io
+  EXTRA_REGISTRIES: ghcr.io
 
 jobs:
   metadata:
