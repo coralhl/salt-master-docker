@@ -1,14 +1,12 @@
-# Dockerized Salt Master v3007.0 _Chlorine_
+# Dockerized Salt Master v3006.8 _Chlorine_
 
-![Banner](/social/docker-salt-master-social.jpg)
+![Banner](/social/salt-master-docker-social.jpg)
 
 [![Salt Project][saltproject_badge]][saltproject_release_notes]
 [![Ubuntu Image][ubuntu_badge]][ubuntu_hub_docker]
 [![Docker Image Size][docker_size_badge]][docker_hub_tags]
 [![Architecture AMD64][arch_amd64_badge]][arch_link]
 [![Architecture ARM64][arch_arm64_badge]][arch_link]
-
-Other languages: [🇪🇸 Español](/docs/es-ES/README.md)
 
 Dockerfile to build a [Salt Project](https://saltproject.io) Master image for the Docker open source container platform.
 
@@ -24,32 +22,32 @@ the [Salt install guide](https://docs.saltproject.io/salt/install-guide/en/lates
 #### Recommended
 
 Automated builds of the image are available on
-[GitHub Container Registry](https://github.com/cdalvaro/docker-salt-master/pkgs/container/docker-salt-master) and is
+[GitHub Container Registry](https://github.com/coralhl/salt-master-docker/pkgs/container/salt-master-docker) and is
 the recommended method of installation.
 
 ```sh
-docker pull ghcr.io/cdalvaro/docker-salt-master:3007.0_2
+docker pull ghcr.io/coralhl/salt-master-docker:3006.8_1
 ```
 
 You can also pull the `latest` tag, which is built from the repository `HEAD`
 
 ```sh
-docker pull ghcr.io/cdalvaro/docker-salt-master:latest
+docker pull ghcr.io/coralhl/salt-master-docker:latest
 ```
 
 #### Other Registries
 
 These images are also available
-from [Docker Registry](https://hub.docker.com/r/cdalvaro/docker-salt-master):
+from [Docker Registry](https://hub.docker.com/r/coralhl/salt-master-docker):
 
 ```sh
-docker pull cdalvaro/docker-salt-master:latest
+docker pull coralhl/salt-master-docker:latest
 ```
 
-and from [Quay.io](https://quay.io/repository/cdalvaro/docker-salt-master):
+and from [Quay.io](https://quay.io/repository/coralhl/salt-master-docker):
 
 ```sh
-docker pull quay.io/cdalvaro/docker-salt-master:latest
+docker pull quay.io/coralhl/salt-master-docker:latest
 ```
 
 ### Build from source
@@ -65,24 +63,24 @@ make release
 The quickest way to get started is using [docker compose](https://docs.docker.com/compose/).
 
 ```sh
-wget https://raw.githubusercontent.com/cdalvaro/docker-salt-master/master/docker-compose.yml
+wget https://raw.githubusercontent.com/coralhl/salt-master-docker/master/docker-compose.yml
 ```
 
-Start the `docker-salt-master` container with the `docker-compose.yml` file by executing:
+Start the `salt-master-docker` container with the `docker-compose.yml` file by executing:
 
 ```sh
 docker compose up --detach
 ```
 
-Alternatively, you can manually launch the `docker-salt-master` container:
+Alternatively, you can manually launch the `salt-master-docker` container:
 
 ```sh
-docker run --name salt_master --detach \
+docker run --name salt-master --detach \
     --publish 4505:4505 --publish 4506:4506 \
     --env 'SALT_LOG_LEVEL=info' \
     --volume $(pwd)/roots/:/home/salt/data/srv/ \
     --volume $(pwd)/keys/:/home/salt/data/keys/ \
-    ghcr.io/cdalvaro/docker-salt-master:latest
+    ghcr.io/coralhl/salt-master-docker:latest
 ```
 
 ## ⚙️ Configuration
@@ -112,15 +110,15 @@ highstate_run:
     - tgt: {{ data['id'] }}
 ```
 
-Finally, run your `docker-salt-master` instance mounting the required directories:
+Finally, run your `salt-master` instance mounting the required directories:
 
 ```sh
-docker run --name salt_master -d \
+docker run --name salt-master -d \
     --publish 4505:4505 --publish 4506:4506 \
     --volume $(pwd)/roots/:/home/salt/data/srv/ \
     --volume $(pwd)/keys/:/home/salt/data/keys/ \
     --volume $(pwd)/config/:/home/salt/data/config/ \
-    ghcr.io/cdalvaro/docker-salt-master:latest
+    ghcr.io/coralhl/salt-master-docker:latest
 ```
 
 This image provides support for automatically restart `salt-master` when configuration files change.
@@ -133,25 +131,25 @@ In order to provide salt with your custom states, you must bind the volume `/hom
 
 ### Minion Keys
 
-Minion keys can be added automatically on startup to `docker-salt-master` by mounting the volume `/home/salt/data/keys`
+Minion keys can be added automatically on startup to `salt-master-docker` by mounting the volume `/home/salt/data/keys`
 and copying the minion keys inside `keys/minions/` directory.
 
-**Note:** The directory `/home/salt/data/keys` is defined as a volume in the `docker-salt-master` image, so its contents can persist after the container is removed. However, it is _recommended to mount this directory to a named volume or a host directory_. That way, you can manage your keys outside the container and avoid losing them when the container is removed.
+**Note:** The directory `/home/salt/data/keys` is defined as a volume in the `salt-master-docker` image, so its contents can persist after the container is removed. However, it is _recommended to mount this directory to a named volume or a host directory_. That way, you can manage your keys outside the container and avoid losing them when the container is removed.
 
 ```sh
 mkdir -p keys/minions
 rsync root@minion1:/etc/salt/pki/minion/minion.pub keys/minions/minion1
 
-docker run --name salt_master -d \
+docker run --name salt-master -d \
     --publish 4505:4505 --publish 4506:4506 \
     --env 'SALT_LOG_LEVEL=info' \
     --volume $(pwd)/roots/:/home/salt/data/srv/ \
     --volume $(pwd)/keys/:/home/salt/data/keys/ \
     --volume $(pwd)/config/:/home/salt/data/config/ \
-    ghcr.io/cdalvaro/docker-salt-master:latest
+    ghcr.io/coralhl/salt-master-docker:latest
 ```
 
-Also, you can set your `docker-salt-master` instance to auto accept minions that match certain grains. To do that, add
+Also, you can set your `salt-master` instance to auto accept minions that match certain grains. To do that, add
 the `autosign_grains.conf` to your `config` directory:
 
 ```sls
@@ -165,8 +163,8 @@ the `domain` file with the domains you want to allow:
 
 ```sls
 # roots/autosign_grains/domain
-cdalvaro.io
-cdalvaro.com
+coralhl.io
+coralhl.com
 ```
 
 It is possible that you have to configure the minion to send the specific grains to the master in the minion config
@@ -186,13 +184,13 @@ More info at:
 It is possible to use signed master keys by establishing the environment variable `SALT_MASTER_SIGN_PUBKEY` to `True`.
 
 ```sh
-docker run --name salt_stack --detach \
+docker run --name salt-master --detach \
     --publish 4505:4505 --publish 4506:4506 \
     --env 'SALT_LOG_LEVEL=info' \
     --env 'SALT_MASTER_SIGN_PUBKEY=True' \
     --volume $(pwd)/roots/:/home/salt/data/srv/ \
     --volume $(pwd)/keys/:/home/salt/data/keys/ \
-    ghcr.io/cdalvaro/docker-salt-master:latest
+    ghcr.io/coralhl/salt-master-docker:latest
 ```
 
 The container will create the `master_sign` key and its signature. More information about how to configure the minion
@@ -204,9 +202,9 @@ Additionally, you can generate new signed keys for your existing master key
 by executing the following command:
 
 ```sh
-docker run --name salt_stack -it --rm \
+docker run --name salt-master -it --rm \
     --volume $(pwd)/keys/:/home/salt/data/keys/ \
-    ghcr.io/cdalvaro/docker-salt-master:latest \
+    ghcr.io/coralhl/salt-master-docker:latest \
     app:gen-signed-keys
 ```
 
@@ -231,7 +229,7 @@ version: "3.9"
 
 services:
   salt-master:
-    image: ghcr.io/cdalvaro/docker-salt-master:latest
+    image: ghcr.io/coralhl/salt-master-docker:latest
     ports:
       - "4505:4505"
       - "4506:4506"
@@ -292,22 +290,22 @@ master configuration file:
 ```yml
 rest_cherrypy:
   port: 8000
-  ssl_crt: /etc/pki/tls/certs/docker-salt-master.crt
-  ssl_key: /etc/pki/tls/certs/docker-salt-master.key
+  ssl_crt: /etc/pki/tls/certs/salt-master-docker.crt
+  ssl_key: /etc/pki/tls/certs/salt-master-docker.key
 ```
 
 The container exposes port `8000` by default, although you can map this port to whatever port you like in
 your `docker run` command:
 
 ```sh
-docker run --name salt_stack --detach \
+docker run --name salt-master --detach \
     --publish 4505:4505 --publish 4506:4506 --publish 8000:8000 \
     --env 'SALT_API_ENABLED=True' \
     --env 'SALT_API_USER_PASS=4wesome-Pass0rd' \
     --volume $(pwd)/roots/:/home/salt/data/srv/ \
     --volume $(pwd)/keys/:/home/salt/data/keys/ \
     --volume $(pwd)/config/:/home/salt/data/config/ \
-    ghcr.io/cdalvaro/docker-salt-master:latest
+    ghcr.io/coralhl/salt-master-docker:latest
 ```
 
 If you choose using the [docker-compose.yml](/docker-compose.yml) file to manage your `salt-master` instance, uncomment `salt-api`
@@ -342,7 +340,7 @@ external_auth:
 More information is available in the following
 link: [External Authentication System (eAuth)](https://docs.saltproject.io/en/latest/topics/eauth/index.html#acl-eauth).
 
-Now you have your `docker-salt-master` Docker image ready to accept external authentications and to connect external tools
+Now you have your `salt-master-docker` Docker image ready to accept external authentications and to connect external tools
 such as [`saltstack/pepper`](https://github.com/saltstack/pepper).
 
 #### Salt Pepper
@@ -402,7 +400,7 @@ and you can set them by using the `SALT_LOG_LEVEL` and `SALT_LEVEL_LOGFILE` envi
 Here you have an example of how to run a `salt-master` with a built-in `salt-minion`:
 
 ```sh
-docker run --name salt_stack --detach \
+docker run --name salt-master --detach \
     --publish 4505:4505 --publish 4506:4506 \
     --env 'SALT_MINION_ENABLED=True' \
     --env 'SALT_MINION_ID=control-minion' \
@@ -411,7 +409,7 @@ docker run --name salt_stack --detach \
     --volume $(pwd)/keys/:/home/salt/data/keys/ \
     --volume $(pwd)/config/:/home/salt/data/config/ \
     --volume $(pwd)/minion_config/:/home/salt/data/minion_config/ \
-    ghcr.io/cdalvaro/docker-salt-master:latest
+    ghcr.io/coralhl/salt-master-docker:latest
 ```
 
 ### Host Mapping
@@ -425,12 +423,12 @@ the `uid` and `gid` to match host ids by passing the environment variables `PUID
 command maps the ids to the current user and group on the host.
 
 ```sh
-docker run --name salt_stack -it --rm \
+docker run --name salt-master -it --rm \
     --publish 4505:4505 --publish 4506:4506 \
     --env "PUID=$(id -u)" --env "PGID=$(id -g)" \
     --volume $(pwd)/roots/:/home/salt/data/srv/ \
     --volume $(pwd)/keys/:/home/salt/data/keys/ \
-    ghcr.io/cdalvaro/docker-salt-master:latest
+    ghcr.io/coralhl/salt-master-docker:latest
 ```
 
 ### Git Fileserver
@@ -515,12 +513,12 @@ gpg: next trustdb check due at 2024-11-09
 --------------------
 sec   rsa3072 2022-11-10 [SC] [expires: 2024-11-09]
       CB032BA54F21722945FDDE399CE3DB8AE37D28B7
-uid           [ultimate] Carlos Alvaro <github@cdalvaro.io>
+uid           [ultimate] Carlos Alvaro <github@coralhl.io>
 ssb   rsa3072 2022-11-10 [E] [expires: 2024-11-09]
 
 # Export public and private keys
 mkdir -p keys/gpgkeys
-KEY_ID=github@cdalvaro.io
+KEY_ID=github@coralhl.io
 gpg --armor --export "${KEY_ID}" > keys/gpgkeys/pubkey.gpg
 gpg --export-secret-keys --export-options export-backup -o keys/gpgkeys/private.key "${KEY_ID}"
 ```
@@ -594,19 +592,19 @@ starts.
 ```
 
 ```sh
-docker run --name salt_stack -it --rm \
+docker run --name salt-master -it --rm \
     --publish 4505:4505 --publish 4506:4506 \
     --env "PUID=$(id -u)" --env "PGID=$(id -g)" \
     --volume $(pwd)/roots/:/home/salt/data/srv/ \
     --volume $(pwd)/3pfs/:/home/salt/data/3pfs/ \
     --volume $(pwd)/keys/:/home/salt/data/keys/ \
-    ghcr.io/cdalvaro/docker-salt-master:latest
+    ghcr.io/coralhl/salt-master-docker:latest
 ```
 
 If you need to add more third party formulas, you can restart the container, or you can type the following command:
 
 ```sh
-docker exec -it salt_stack /sbin/entrypoint.sh app:reload-3rd-formulas
+docker exec -it salt-master /sbin/entrypoint.sh app:reload-3rd-formulas
 ```
 
 `file_roots` base configuration file will be updated with current existing formulas and `salt-master` service will be
@@ -617,7 +615,7 @@ restarted to reload the new configuration.
 Some formulas may depend on Python packages that are not included in the default Salt installation. You can add these packages by setting the `PYTHON_PACKAGES_FILE` environment variable with an absolute path pointing to a `requirements.txt` file inside the container.
 
 ```sh
-docker run --name salt_master --detach \
+docker run --name salt-master --detach \
     --publish 4505:4505 --publish 4506:4506 \
     --env SALT_LOG_LEVEL="info" \
     --env PYTHON_PACKAGES_FILE=/home/salt/data/other/requirements.txt \
@@ -625,7 +623,7 @@ docker run --name salt_master --detach \
     --volume $(pwd)/keys/:/home/salt/data/keys/ \
     --volume $(pwd)/logs/:/home/salt/data/logs/ \
     --volume $(pwd)/requirements.txt:/home/salt/data/other/requirements.txt \
-    ghcr.io/cdalvaro/docker-salt-master:latest
+    ghcr.io/coralhl/salt-master-docker:latest
 ```
 
 This will install the packages listed in the `requirements.txt` file into the container
@@ -634,14 +632,14 @@ before `salt-master` starts.
 Alternatively, you can set the `PYTHON_PACKAGES` environment variable with a list of Python packages to be installed.
 
 ```sh
-docker run --name salt_master --detach \
+docker run --name salt-master --detach \
     --publish 4505:4505 --publish 4506:4506 \
     --env SALT_LOG_LEVEL="info" \
     --env PYTHON_PACKAGES="docker==7.0.0 redis" \
     --volume $(pwd)/roots/:/home/salt/data/srv/ \
     --volume $(pwd)/keys/:/home/salt/data/keys/ \
     --volume $(pwd)/logs/:/home/salt/data/logs/ \
-    ghcr.io/cdalvaro/docker-salt-master:latest
+    ghcr.io/coralhl/salt-master-docker:latest
 ```
 
 Although both methods are supported, they are mutually exclusive. If both are set, `PYTHON_PACKAGES_FILE` will take precedence.
@@ -657,13 +655,13 @@ Inside the directory you could find `supervisor/` logs and `salt/` logs.
 You can access all logs by mounting the volume: `/home/salt/data/logs/`.
 
 ```sh
-docker run --name salt_master --detach \
+docker run --name salt-master --detach \
     --publish 4505:4505 --publish 4506:4506 \
     --env 'SALT_LOG_LEVEL=info' \
     --volume $(pwd)/roots/:/home/salt/data/srv/ \
     --volume $(pwd)/keys/:/home/salt/data/keys/ \
     --volume $(pwd)/logs/:/home/salt/data/logs/ \
-    ghcr.io/cdalvaro/docker-salt-master:latest
+    ghcr.io/coralhl/salt-master-docker:latest
 ```
 
 Check [Available Configuration Parameters](#available-configuration-parameters) section for configuring logrotate.
@@ -685,8 +683,8 @@ version: "3.4"
 
 services:
   master:
-    container_name: salt_master
-    image: ghcr.io/cdalvaro/docker-salt-master:latest
+    container_name: salt-master
+    image: ghcr.io/coralhl/salt-master-docker:latest
     healthcheck:
       test: ["CMD", "/usr/local/sbin/healthcheck"]
       start_period: 30s
@@ -698,7 +696,7 @@ documentation)
 Or, if you launch your container [with docker](https://docs.docker.com/engine/reference/run/#healthcheck):
 
 ```sh
-docker run --name salt_master --detach \
+docker run --name salt-master --detach \
     --publish 4505:4505 --publish 4506:4506 \
     --health-cmd='/usr/local/sbin/healthcheck' \
     --health-start-period=30s \
@@ -706,13 +704,13 @@ docker run --name salt_master --detach \
     --volume $(pwd)/roots/:/home/salt/data/srv/ \
     --volume $(pwd)/keys/:/home/salt/data/keys/ \
     --volume $(pwd)/logs/:/home/salt/data/logs/ \
-    ghcr.io/cdalvaro/docker-salt-master:latest
+    ghcr.io/coralhl/salt-master-docker:latest
 ```
 
 Then you can manually check this info by running the following command:
 
 ```sh
-docker inspect --format "{{json .State.Health }}" salt_master | jq
+docker inspect --format "{{json .State.Health }}" salt-master | jq
 ```
 
 Then, the output will be something similar to this:
@@ -734,7 +732,7 @@ Then, the output will be something similar to this:
 
 #### Autoheal
 
-If you run your _docker-salt-master_ instance with healthcheck enabled, you can
+If you run your _salt-master-docker_ instance with healthcheck enabled, you can
 use [willfarrell/autoheal](https://github.com/willfarrell/docker-autoheal) image to restart your service when
 healthcheck fails:
 
@@ -755,7 +753,7 @@ Please refer the docker run command options for the `--env-file` flag where you 
 variables in a single file. This will save you from writing a potentially long docker run command. Alternatively you can
 use docker-compose.
 
-Below you can find a list with the available options that can be used to customize your `docker-salt-master`
+Below you can find a list with the available options that can be used to customize your `salt-master-docker`
 installation.
 
 | Parameter                                                                                                                             | Description                                                                                                                                                                                                                                                 |
@@ -806,13 +804,13 @@ publish_port: 3505
 ret_port: 3506
 EOF
 
-docker run --name salt_master -d \
+docker run --name salt-master -d \
     --publish 3505:3505 --publish 3506:3506 \
     --env 'SALT_LOG_LEVEL=info' \
     --volume $(pwd)/roots/:/home/salt/data/srv/ \
     --volume $(pwd)/keys/:/home/salt/data/keys/ \
     --volume $(pwd)/config/:/home/salt/data/config/ \
-    ghcr.io/cdalvaro/docker-salt-master:latest
+    ghcr.io/coralhl/salt-master-docker:latest
 ```
 
 ## 🧑‍🚀 Usage
@@ -820,13 +818,13 @@ docker run --name salt_master -d \
 To test which salt minions are listening the following command can be executed directly from the host machine:
 
 ```sh
-docker exec -it salt_master salt '*' test.ping
+docker exec -it salt-master salt '*' test.ping
 ```
 
 Then, you can apply salt states to your minions:
 
 ```sh
-docker exec -it salt_master salt '*' state.apply [state]
+docker exec -it salt-master salt '*' state.apply [state]
 ```
 
 ## 🧰 Shell Access
@@ -835,7 +833,7 @@ For debugging and maintenance purposes you may want to access the container's sh
 If you are using docker version 1.3.0 or higher you can access a running container shell using docker exec command.
 
 ```sh
-docker exec -it salt_master bash
+docker exec -it salt-master bash
 ```
 
 ## 💀 Restart Services
@@ -843,7 +841,7 @@ docker exec -it salt_master bash
 You can restart containers services by running the following command:
 
 ```sh
-docker exec -it salt_master entrypoint.sh app:restart [salt-service]
+docker exec -it salt-master entrypoint.sh app:restart [salt-service]
 ```
 
 Where `salt-service` is one of: `salt-master` or `salt-api` (if `SALT_API_ENABLED` is set to `True`).
@@ -863,9 +861,9 @@ Many thanks to:
 
 - [The SaltProject](https://saltproject.io) team for the excellent [salt](https://github.com/saltstack/salt) project
 - [JetBrains](https://www.jetbrains.com) for their free [OpenSource](https://jb.gg/OpenSourceSupport) license
-- [The Contributors](https://github.com/cdalvaro/docker-salt-master/graphs/contributors) for all the smart code and
+- [The Contributors](https://github.com/coralhl/salt-master-docker/graphs/contributors) for all the smart code and
   suggestions merged in the project
-- [The Stargazers](https://github.com/cdalvaro/docker-salt-master/stargazers) for showing their support
+- [The Stargazers](https://github.com/coralhl/salt-master-docker/stargazers) for showing their support
 
 <div style="display: flex; align-items: center; justify-content: space-around;">
   <img src="/social/SaltProject_verticallogo_teal.png" alt="SaltProject" height="128px">
@@ -881,12 +879,12 @@ Many thanks to:
 - https://docs.saltproject.io/en/getstarted/
 - https://docs.saltproject.io/en/latest/contents.html
 
-[saltproject_badge]: https://img.shields.io/badge/Salt-v3007.0-lightgrey.svg?logo=Saltstack
-[saltproject_release_notes]: https://docs.saltproject.io/en/latest/topics/releases/3007.0.html "Salt Project Release Notes"
-[ubuntu_badge]: https://img.shields.io/badge/ubuntu-jammy--20240227-E95420.svg?logo=Ubuntu
+[saltproject_badge]: https://img.shields.io/badge/Salt-v3006.8-lightgrey.svg?logo=Saltstack
+[saltproject_release_notes]: https://docs.saltproject.io/en/latest/topics/releases/3006.8.html "Salt Project Release Notes"
+[ubuntu_badge]: https://img.shields.io/badge/ubuntu-jammy--20240416-E95420.svg?logo=Ubuntu
 [ubuntu_hub_docker]: https://hub.docker.com/_/ubuntu/ "Ubuntu Image"
-[docker_size_badge]: https://img.shields.io/docker/image-size/cdalvaro/docker-salt-master/latest?logo=docker&color=2496ED
-[docker_hub_tags]: https://hub.docker.com/repository/docker/cdalvaro/docker-salt-master/tags
+[docker_size_badge]: https://img.shields.io/docker/image-size/coralhl/salt-master-docker/latest?logo=docker&color=2496ED
+[docker_hub_tags]: https://hub.docker.com/repository/docker/coralhl/salt-master-docker/tags
 [reddit_badge]: https://img.shields.io/badge/reddit-saltstack-orange?logo=reddit&logoColor=FF4500&color=FF4500
 [subreddit]: https://www.reddit.com/r/saltstack/
 [stackoverflow_badge]: https://img.shields.io/badge/stackoverflow-community-orange?logo=stackoverflow&color=FE7A16
@@ -895,7 +893,7 @@ Many thanks to:
 [slack_community]: https://saltstackcommunity.herokuapp.com
 [arch_amd64_badge]: https://img.shields.io/badge/arch-amd64-inactive.svg
 [arch_arm64_badge]: https://img.shields.io/badge/arch-arm64-inactive.svg
-[arch_link]: https://github.com/users/cdalvaro/packages/container/package/docker-salt-master
+[arch_link]: https://github.com/users/coralhl/packages/container/package/salt-master-docker
 
 ## 📃 License
 
