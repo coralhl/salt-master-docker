@@ -122,7 +122,7 @@ jobs:
         with:
           registry: ghcr.io
           username: ${{ github.repository_owner }}
-          password: ${{ secrets.CR_PAT }}
+          password: ${{ secrets.GH_PASSWORD }}
 
       - name: Build
         uses: docker/build-push-action@v5.3.0
