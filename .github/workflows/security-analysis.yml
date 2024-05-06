@@ -37,7 +37,7 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-buildx-
 
-      - name: Build docker-salt-master image
+      - name: Build salt-master image
         if: github.event_name != 'schedule'
         uses: docker/build-push-action@v5.3.0
         with:
@@ -45,22 +45,22 @@ jobs:
           file: ./Dockerfile
           cache-from: |
             type=local,src=${{ env.CACHE_PATH }}
-            ghcr.io/cdalvaro/docker-salt-master:latest
+            ghcr.io/coralhl/salt-master:latest
           cache-to: type=local,dest=${{ env.CACHE_PATH }}
           pull: true
           load: true
-          tags: ghcr.io/cdalvaro/docker-salt-master:${{ github.sha }}
+          tags: ghcr.io/coralhl/salt-master:${{ github.sha }}
 
       - name: Download and tag latest image
         if: github.event_name == 'schedule'
         run: |
-          docker pull ghcr.io/cdalvaro/docker-salt-master:latest
-          docker tag ghcr.io/cdalvaro/docker-salt-master:latest ghcr.io/cdalvaro/docker-salt-master:${{ github.sha }}
+          docker pull ghcr.io/coralhl/salt-master:latest
+          docker tag ghcr.io/coralhl/salt-master:latest ghcr.io/coralhl/salt-master:${{ github.sha }}
 
       - name: Run Trivy vulnerability scanner
         uses: aquasecurity/trivy-action@master
         with:
-          image-ref: 'ghcr.io/cdalvaro/docker-salt-master:${{ github.sha }}'
+          image-ref: 'ghcr.io/coralhl/salt-master:${{ github.sha }}'
           format: 'template'
           template: '@/contrib/sarif.tpl'
           output: 'trivy-results.sarif'

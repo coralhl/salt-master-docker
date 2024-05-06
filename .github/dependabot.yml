@@ -6,7 +6,7 @@ updates:
     schedule:
       interval: "daily"
     assignees:
-      - cdalvaro
+      - coralhl
 
   # Configuration for Dockerfile
   - package-ecosystem: "docker"
@@ -14,6 +14,6 @@ updates:
     schedule:
       interval: "weekly"
     assignees:
-      - cdalvaro
+      - coralhl
     # Disable all pull requests for Docker dependencies
     open-pull-requests-limit: 0
