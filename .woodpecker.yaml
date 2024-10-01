@@ -1,6 +1,6 @@
 steps:
   build:
-    image: woodpeckerci/plugin-docker-buildx
+    image: coralhl/woodpecker-buildx-plugin
     settings:
       username:
         from_secret: dockerhub_username
